@@ -23,8 +23,11 @@ pipeline {
         stage("Test") {
             steps {
                 sh """
-                    pip install --quiet -r requirements.txt
-                    pytest tests/ -v --tb=short
+                    docker run --rm \
+                        -v \$(pwd):/app \
+                        -w /app \
+                        python:3.12-slim \
+                        sh -c "pip install --quiet -r requirements.txt && pytest tests/ -v --tb=short"
                 """
             }
         }
@@ -59,7 +62,7 @@ pipeline {
                 sh """
                     kubectl set image deployment/mon-app \
                         mon-app=${DOCKERHUB_USER}/${IMAGE_NAME}:latest \
-                        -n app-prod
+                        -n mon-app
                 """
             }
         }
