@@ -22,13 +22,13 @@ pipeline {
         // ── 2. TEST ──────────────────────────────────────────
         stage("Test") {
             steps {
-                sh """
+                sh '''
                     docker run --rm \
-                        -v \$(pwd):/app \
+                        -v /var/jenkins_home/workspace/mon-app:/app \
                         -w /app \
                         python:3.12-slim \
                         sh -c "pip install --quiet -r requirements.txt && pytest tests/ -v --tb=short"
-                """
+                '''
             }
         }
 
