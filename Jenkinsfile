@@ -1,24 +1,20 @@
 pipeline {
     agent any
-
     // ── Variables globales ───────────────────────────────────
     environment {
         DOCKERHUB_USER  = "adillabiad"
         IMAGE_NAME      = "mon-app"
         APP_VERSION     = sh(script: "cat VERSION", returnStdout: true).trim()
-        IMAGE_TAG       = "${APP_VERSION}-${GIT_COMMIT[0..6]}"         // ex: 0.1.0-a3f5c12
+        IMAGE_TAG       = "${APP_VERSION}-${GIT_COMMIT[0..6]}"
         DOCKERHUB_CREDS = credentials("dockerhub-secret")
     }
-
     stages {
-
         // ── 1. CHECKOUT ──────────────────────────────────────
         stage("Checkout") {
             steps {
                 checkout scm
             }
         }
-
         // ── 2. TEST ──────────────────────────────────────────
         stage("Test") {
             steps {
@@ -28,7 +24,6 @@ pipeline {
                 """
             }
         }
-
         // ── 3. BUILD IMAGE ───────────────────────────────────
         stage("Build") {
             steps {
@@ -41,7 +36,6 @@ pipeline {
                 """
             }
         }
-
         // ── 4. PUSH DOCKERHUB ────────────────────────────────
         stage("Push") {
             steps {
@@ -52,19 +46,17 @@ pipeline {
                 """
             }
         }
-
-    //     // ── 5. DEPLOY ────────────────────────────────────────
-    //     stage("Deploy") {
-    //         steps {
-    //             sh """
-    //                 kubectl set image deployment/mon-app \
-    //                     mon-app=${DOCKERHUB_USER}/${IMAGE_NAME}:latest \
-    //                     -n mon-app
-    //             """
-    //         }
-    //     }
-    // }
-
+        // ── 5. DEPLOY — désactivé temporairement ─────────────
+        // stage("Deploy") {
+        //     steps {
+        //         sh """
+        //             kubectl set image deployment/mon-app \
+        //                 mon-app=${DOCKERHUB_USER}/${IMAGE_NAME}:latest \
+        //                 -n mon-app
+        //         """
+        //     }
+        // }
+    }  // ← ferme stages
     // ── POST : notifications ─────────────────────────────────
     post {
         success {
