@@ -53,17 +53,17 @@ pipeline {
             }
         }
 
-        // ── 5. DEPLOY ────────────────────────────────────────
-        stage("Deploy") {
-            steps {
-                sh """
-                    kubectl set image deployment/mon-app \
-                        mon-app=${DOCKERHUB_USER}/${IMAGE_NAME}:latest \
-                        -n mon-app
-                """
-            }
-        }
-    }
+    //     // ── 5. DEPLOY ────────────────────────────────────────
+    //     stage("Deploy") {
+    //         steps {
+    //             sh """
+    //                 kubectl set image deployment/mon-app \
+    //                     mon-app=${DOCKERHUB_USER}/${IMAGE_NAME}:latest \
+    //                     -n mon-app
+    //             """
+    //         }
+    //     }
+    // }
 
     // ── POST : notifications ─────────────────────────────────
     post {
